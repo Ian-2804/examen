@@ -1,0 +1,128 @@
+import os
+
+
+ubicaciones = ["Platinum"] * 20 + ["Gold"] * 30 + ["Silver"] * 50
+vendidas = [False] * 100
+precios = {"Platinum": 120000, "Gold": 80000, "Silver": 50000}
+asistentes = {}
+
+
+def limpiar_pantalla():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def mostrar_menu():
+    print(" CONCIERTO VIP de MICHAEL JAM ")
+    print("1. Comprar entradas")
+    print("2. Mostrar ubicaciones disponibles")
+    print("3. Ver listado de asistentes")
+    print("4. Mostrar ganancias totales")
+    print("5. Salir")
+
+
+def comprar_entradas():
+    limpiar_pantalla()
+    print("COMPRAR ENTRADAS")
+    cantidad = int(input("Ingrese la cantidad de entradas a comprar (entre 1 y 3): "))
+
+
+    if cantidad < 1 or cantidad > 3:
+        print("Cantidad de entradas inválida. Intente nuevamente.")
+        input("Presione Enter para continuar")
+        return
+
+
+    for i in range(cantidad):
+        limpiar_pantalla()
+        print("COMPRAR ENTRADAS")
+        print("Ubicaciones disponibles:")
+        mostrar_ubicaciones()
+        ubicacion = input("Seleccione una ubicación disponible: ")
+
+
+        if ubicacion not in ubicaciones:
+            print("Ubicación no disponible. Intente nuevamente.")
+            input("Presione Enter para continuar")
+            return
+
+
+        indice = ubicaciones.index(ubicacion)
+        vendidas[indice] = True
+
+
+        run = input("Ingrese el RUN (sin guiones ni dígito verificador) de la persona que ocupará el asiento: ")
+        asistentes[run] = ubicacion
+
+
+    limpiar_pantalla()
+    print("Entradas compradas exitosamente.")
+    input("Presione Enter para continuar")
+
+
+def mostrar_ubicaciones():
+    for i, ubicacion in enumerate(ubicaciones):
+        estado = "Vendida" if vendidas[i] else "Disponible"
+        print(f"{i+1}. Asiento {i+1}: {ubicacion} ({estado})")
+
+
+def ver_listado_asistentes():
+    limpiar_pantalla()
+    print("LISTADO DE ASISTENTES")
+    if len(asistentes) == 0:
+        print("No hay asistentes registrados.")
+    else:
+        print("RUN\t\tUbicación")
+        for run, ubicacion in sorted(asistentes.items()):
+            print(f"{run}\t{ubicacion}")
+    input("Presione Enter para continuar")
+
+
+def mostrar_ganancias_totales():
+    limpiar_pantalla()
+    print("GANANCIAS TOTALES")
+    total = 0
+    print("Tipo Entrada\tCantidad\tTotal")
+    for ubicacion, cantidad in obtener_cantidad_entradas().items():
+        precio = precios[ubicacion]
+        subtotal = precio * cantidad
+        total += subtotal
+        print(f"{ubicacion}\t{cantidad}\t\t{subtotal}")
+
+
+    print(f"\nTOTAL\t\t{sum(obtener_cantidad_entradas().values())}\t\t{total}")
+    input("Presione Enter para continuar")
+
+
+def obtener_cantidad_entradas():
+    cantidad_entradas = {"Platinum": 0, "Gold": 0, "Silver": 0}
+    for ubicacion in asistentes.values():
+        cantidad_entradas[ubicacion] += 1
+    return cantidad_entradas
+
+
+while True:
+    limpiar_pantalla()
+    mostrar_menu()
+    opcion = input("Seleccione una opción: ")
+
+
+    if opcion == "1":
+        comprar_entradas()
+    elif opcion == "2":
+        limpiar_pantalla()
+        print(" UBICACIONES DISPONIBLES")
+        mostrar_ubicaciones()
+        input("Presione Enter para continuar")
+    elif opcion == "3":
+        ver_listado_asistentes()
+    elif opcion == "4":
+        mostrar_ganancias_totales()
+    elif opcion == "5":
+        limpiar_pantalla()
+        print("Gracias por utilizar el sistema de venta de entradas")
+        print("Ian Alzamora")
+        print("Fecha de hoy: 13 del 07 del 2023")
+        break
+    else:
+        print("Opción inválida. Intente nuevamente.")
+        input("Presione Enter para continuar")
